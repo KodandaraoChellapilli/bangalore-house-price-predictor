@@ -38,11 +38,20 @@ def predict_home_price():
     except (TypeError, ValueError):
         return jsonify({"error": "Invalid input types provided"}), 400
 
-    estimated_price = util.get_estimated_price(location, total_sqft, bhk, bath)
+    if total_sqft <= 0 or bhk <= 0 or bath <= 0:
+        return jsonify({"error": "total_sqft, bhk, and bath must be positive values"}), 400
+    if not location:
+        return jsonify({"error": "location is required"}), 400
+
+    try:
+        estimated_price = util.get_estimated_price(location, total_sqft, bhk, bath)
+    except Exception:
+        return jsonify({"error": "Prediction service unavailable"}), 500
+
     return jsonify({"estimated_price": estimated_price})
 
 
 if __name__ == "__main__":
     util.load_saved_artifacts()
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port)
