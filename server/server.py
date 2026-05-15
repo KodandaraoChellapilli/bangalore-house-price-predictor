@@ -6,7 +6,17 @@ from flask_cors import CORS
 import util
 
 app = Flask(__name__)
-CORS(app)
+
+# Configure CORS from env for production frontends (for example, Vercel domains).
+raw_cors_origins = os.environ.get("CORS_ORIGINS", "*").strip()
+if raw_cors_origins == "*":
+    CORS(app)
+else:
+    origins = [origin.strip() for origin in raw_cors_origins.split(",") if origin.strip()]
+    CORS(app, resources={r"/*": {"origins": origins}})
+
+# Load model artifacts once when the worker starts.
+util.load_saved_artifacts()
 
 
 @app.get("/health")
@@ -52,6 +62,5 @@ def predict_home_price():
 
 
 if __name__ == "__main__":
-    util.load_saved_artifacts()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
