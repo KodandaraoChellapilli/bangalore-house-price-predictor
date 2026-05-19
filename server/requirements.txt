@@ -2,7 +2,12 @@ Flask==3.0.3
 flask-cors==4.0.0
 gunicorn==21.2.0
 
-numpy==1.26.4
-pandas==2.2.2
-scikit-learn==1.4.2
-scipy==1.11.4
+# Keep model-compatible stack for Python 3.11 deployments.
+numpy==1.26.4; python_version < "3.12"
+scikit-learn==1.4.2; python_version < "3.12"
+scipy==1.11.4; python_version < "3.12"
+
+# Use newer wheels when a host forces Python 3.12+ (including 3.14).
+numpy>=2.2,<3; python_version >= "3.12"
+scikit-learn>=1.6,<2; python_version >= "3.12"
+scipy>=1.15,<2; python_version >= "3.12"

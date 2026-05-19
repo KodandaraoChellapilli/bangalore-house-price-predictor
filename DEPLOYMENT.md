@@ -10,11 +10,13 @@
 - `model/columns.json`
 
 ## Build/start commands
-- Install: `pip install -r server/requirements.txt`
+- Install: `pip install -r requirements.txt` (or `pip install -r server/requirements.txt`)
 - Start: `python server/server.py`
 
 ## Environment
 - `PORT` is optional locally; platforms usually inject it automatically.
+- Pin Python to `3.11.9` for hosted builds (Render dashboard `PYTHON_VERSION=3.11.9` or keep the repo `.python-version` file).
+- Dependency markers in `server/requirements.txt` allow fallback installs on Python `3.12+` hosts, but `3.11.9` remains the recommended runtime for model compatibility.
 
 ## Notes
 - Keep `model/` folder deployed with backend service.
