@@ -5,7 +5,13 @@ import type {
   PredictionResponse,
 } from '../types/types'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api'
+const configuredBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim()
+
+if (import.meta.env.PROD && !configuredBaseUrl) {
+  throw new Error('VITE_API_BASE_URL must be set in production.')
+}
+
+const API_BASE_URL = (configuredBaseUrl || 'http://127.0.0.1:5000').replace(/\/+$/, '')
 
 const api = axios.create({
   baseURL: API_BASE_URL,
