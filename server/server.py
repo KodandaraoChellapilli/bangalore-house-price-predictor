@@ -19,6 +19,17 @@ else:
 util.load_saved_artifacts()
 
 
+@app.get("/")
+def index():
+    return jsonify(
+        {
+            "status": "ok",
+            "message": "EstateIQ backend is running",
+            "endpoints": ["/health", "/get_location_names", "/predict_home_price"],
+        }
+    )
+
+
 @app.get("/health")
 def health():
     return jsonify({"status": "ok"})

@@ -11,7 +11,8 @@
 
 ## Build/start commands
 - Install: `pip install -r requirements.txt` (or `pip install -r server/requirements.txt`)
-- Start: `python server/server.py`
+- Start (production): `gunicorn --bind 0.0.0.0:$PORT server:app`
+- Start (local dev): `python server/server.py`
 
 ## Environment
 - `PORT` is optional locally; platforms usually inject it automatically.
