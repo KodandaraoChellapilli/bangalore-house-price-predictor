@@ -58,15 +58,12 @@ function AIChatAssistant() {
     setTyping(true)
     scrollToBottom()
 
-    const { reply, mode } = await getAssistantReply(cleanText)
+    const { reply } = await getAssistantReply(cleanText)
 
     const assistantMessage: Message = {
       id: crypto.randomUUID(),
       role: 'assistant',
-      content:
-        mode === 'fallback'
-          ? `${reply}\n\nTip: add VITE_OPENAI_API_KEY or VITE_GEMINI_API_KEY in client/.env for live AI responses.`
-          : reply,
+      content: reply,
     }
 
     setMessages((prev) => [...prev, assistantMessage])

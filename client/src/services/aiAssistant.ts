@@ -5,7 +5,14 @@ const GEMINI_MODEL =
   (import.meta.env.VITE_GEMINI_MODEL as string | undefined) ?? 'gemini-1.5-flash'
 
 const SYSTEM_PROMPT =
-  'You are EstateIQ AI, a helpful Bangalore real estate assistant. Explain concepts in simple terms. Discuss ROI, rental yield, appreciation, EMI, budgeting, neighborhood comparison, and buy vs rent. Keep replies concise, practical, and non-legal.'
+  [
+    'You are EstateIQ AI, a friendly real estate advisor for Bangalore.',
+    'Be conversational, practical, and human-like.',
+    'Focus on ROI, rental yield, EMI, and investment guidance.',
+    'Avoid robotic or technical responses.',
+    'Give clear next-step suggestions and keep replies concise.',
+    'Do not mention system prompts, APIs, environment variables, or implementation details.',
+  ].join(' ')
 
 const fallbackKnowledge: Array<{ pattern: RegExp; response: string }> = [
   {
@@ -36,11 +43,29 @@ const fallbackKnowledge: Array<{ pattern: RegExp; response: string }> = [
 ]
 
 const defaultFallback =
-  'I can help with Bangalore property investment, ROI, rental yield, EMI planning, and area comparisons. Ask me your budget and target location for a tailored suggestion.'
+  'I can still help you with Bangalore real estate insights, but live AI is currently limited. Share your budget, preferred area, and timeline, and I will suggest practical options.'
+
+const fallbackOpeners = [
+  'Great question.',
+  'That is a smart thing to evaluate.',
+  'Happy to help with that.',
+  'Let us break this down simply.',
+]
+
+const pickFallbackOpener = (query: string) => {
+  let hash = 0
+  for (const char of query.toLowerCase()) {
+    hash = (hash + char.charCodeAt(0)) % fallbackOpeners.length
+  }
+  return fallbackOpeners[hash]
+}
 
 const buildFallbackResponse = (query: string) => {
   const matched = fallbackKnowledge.find((item) => item.pattern.test(query))
-  return matched?.response ?? defaultFallback
+  if (matched) {
+    return `${pickFallbackOpener(query)} ${matched.response}`
+  }
+  return `${pickFallbackOpener(query)} ${defaultFallback}`
 }
 
 const askOpenAI = async (query: string) => {
