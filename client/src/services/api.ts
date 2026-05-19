@@ -6,12 +6,17 @@ import type {
 } from '../types/types'
 
 const configuredBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim()
+const DEFAULT_API_BASE_URL =
+  'https://bangalore-house-price-predictor-4-ewi9.onrender.com'
 
-if (import.meta.env.PROD && !configuredBaseUrl) {
-  throw new Error('VITE_API_BASE_URL must be set in production.')
+if (!configuredBaseUrl) {
+  console.warn(
+    'VITE_API_BASE_URL is not set. Using default API:',
+    DEFAULT_API_BASE_URL,
+  )
 }
 
-const API_BASE_URL = (configuredBaseUrl || 'http://127.0.0.1:5000').replace(/\/+$/, '')
+const API_BASE_URL = (configuredBaseUrl || DEFAULT_API_BASE_URL).replace(/\/+$/, '')
 
 const api = axios.create({
   baseURL: API_BASE_URL,
